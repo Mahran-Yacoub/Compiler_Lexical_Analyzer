@@ -127,10 +127,10 @@ public class Main {
     private static ArrayList<Character> getInDirectSymbols(String path) {
         return getDirectSymbols(path);
     }
-    private static ArrayList<Character> getDirectSymbols(String path) {
+    private static ArrayList<Character> getDirectSymbols(String filePath) {
 
         ArrayList<Character> characters = new ArrayList<>();
-        File file = new File(path);
+        File file = new File(filePath);
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()){
