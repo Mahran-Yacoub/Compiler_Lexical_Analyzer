@@ -114,6 +114,34 @@ public class Main {
                             tokens.add(new Token(token));
                             continue;
                         }
+
+                        if(currentChar == '('){
+
+                            if ((i + 1) < line.length && line[i + 1] == '*') {
+                                CommentType commentEnd = getCommentEnd(i+2 , "(*" , line , scanner);
+                                if(commentEnd == null){
+                                    break;
+                                }
+                                i = commentEnd.getIndex();
+                                line = commentEnd.getLine();
+                            } else {
+                                token = "(";
+                                tokens.add(new Token(token));
+                            }
+                            continue;
+                        }
+
+
+                        if(currentChar == '{'){
+                            CommentType commentEnd = getCommentEnd(i+1,"{", line, scanner);
+                            if(commentEnd == null){
+                                break;
+                            }
+                            i = commentEnd.getIndex();
+                            line = commentEnd.getLine();
+                            continue;
+                        }
+
                     }
                 }
             }
@@ -123,6 +151,53 @@ public class Main {
         }
 
         return tokens;
+    }
+    private static CommentType getCommentEnd(int j, String typeOfComment, char[] line, Scanner scanner) {
+
+        if(typeOfComment.equals("{")){
+
+            for(int z = j ; z<line.length ; z++){
+
+                if(line[z] == '}'){
+                    return new CommentType(line,z) ;
+                }
+            }
+
+            while (scanner.hasNextLine()){
+                j = 0 ;
+                char [] newLine = scanner.nextLine().toCharArray();
+                for(int z = j ; z<newLine.length ; z++){
+
+                    if(newLine[z] == '}'){
+                        return new CommentType(newLine,z) ;
+                    }
+                }
+            }
+
+
+        }else if(typeOfComment.equals("(*")){
+
+            for(int z = j ; z<line.length-1 ; z++){
+
+                if(line[z] == '*' && line[z+1] == ')'){
+                    return new CommentType(line,z+1) ;
+                }
+            }
+
+            while (scanner.hasNextLine()){
+
+                j = 0 ;
+                char [] newLine = scanner.nextLine().toCharArray();
+                for(int z = j ; z<newLine.length-1 ; z++){
+
+                    if(newLine[z] == '*' && newLine[z+1] == ')'){
+                        return new CommentType(newLine,z+1) ;
+                    }
+                }
+            }
+        }
+
+        return null ;
     }
     private static ArrayList<Character> getInDirectSymbols(String path) {
         return getDirectSymbols(path);
