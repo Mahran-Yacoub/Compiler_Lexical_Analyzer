@@ -8,11 +8,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+        ReadFile readFile = new ReadFile();
+        CONSTANT.KEYWORDS_LIST = readFile.readFileAsList(CONSTANT.KEYWORDS_FILE);
+        CONSTANT.STANDARD_IDENTIFIERS_LIST = readFile.readFileAsList(CONSTANT.STANDARD_IDENTIFIERS_FILE);
+        CONSTANT.SYMBOLS_LIST = readFile.readFileAsList(CONSTANT.SYMBOLS_FILE);
+
         File file = new File("src/pascal/programs/pascal1.txt");
         ArrayList<Token> tokens = getTokens(file);
 
         for (Token token : tokens) {
-            System.out.println(token);
+            System.out.println(token+"\n");
         }
     }
     public static ArrayList<Token> getTokens(File file) {
@@ -44,10 +49,9 @@ public class Main {
                     ArrayList<Character> directSymbols = getDirectSymbols("src/pascal/programs/DirectSymbols.txt");
 
                     if (directSymbols.contains(currentChar)) {
-                        tokens.add(new Token(currentChar + ""));
+                        tokens.add(new Token(currentChar + "" , Type.SYMBOL));
                         continue;
                     }
-
 
                     ArrayList<Character> inDirectSymbols = getInDirectSymbols("src/pascal/programs/InDirectSymbols.txt");
 
@@ -64,10 +68,9 @@ public class Main {
                                 token = ".";
                             }
 
-                            tokens.add(new Token(token));
+                            tokens.add(new Token(token, Type.SYMBOL));
                             continue;
                         }
-
 
 
                         if (currentChar == CONSTANT.COLON) {
@@ -79,7 +82,7 @@ public class Main {
                                 token = ":";
                             }
 
-                            tokens.add(new Token(token));
+                            tokens.add(new Token(token,Type.SYMBOL));
                             continue;
                         }
 
@@ -93,7 +96,7 @@ public class Main {
                                 token = ">";
                             }
 
-                            tokens.add(new Token(token));
+                            tokens.add(new Token(token , Type.SYMBOL));
                             continue;
 
                         }
@@ -111,7 +114,7 @@ public class Main {
                                 token = "<";
                             }
 
-                            tokens.add(new Token(token));
+                            tokens.add(new Token(token, Type.SYMBOL));
                             continue;
                         }
 
@@ -126,7 +129,7 @@ public class Main {
                                 line = commentEnd.getLine();
                             } else {
                                 token = "(";
-                                tokens.add(new Token(token));
+                                tokens.add(new Token(token, Type.SYMBOL));
                             }
                             continue;
                         }
@@ -222,6 +225,7 @@ public class Main {
 
         int j = i + 1;
         String number = line[i] + "";
+        boolean isInteger = true ;
         while (j < line.length) {
 
             if (Character.isDigit(line[j])) {
@@ -234,6 +238,7 @@ public class Main {
                 if ((j + 1) < line.length && Character.isDigit(line[(j + 1)])) {
                     number += line[j];
                     j++;
+                    isInteger = false ;
                     continue;
                 }
             }
@@ -241,7 +246,8 @@ public class Main {
             break;
         }
 
-        tokens.add(new Token(number));
+        Type type = (isInteger)?Type.INTEGER:Type.FLOAT;
+        tokens.add(new Token(number,type));
         return j - 1;
     }
     private static int getName(ArrayList<Token> tokens, char[] line, int i) {
@@ -257,4 +263,5 @@ public class Main {
         tokens.add(new Token(name));
         return j - 1;
     }
+
 }
