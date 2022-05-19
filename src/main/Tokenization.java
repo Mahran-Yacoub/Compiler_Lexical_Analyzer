@@ -1,26 +1,17 @@
+package main;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+public class Tokenization {
 
-public class Main {
-
-    public static void main(String[] args) {
-
-        ReadFile readFile = new ReadFile();
-        CONSTANT.KEYWORDS_LIST = readFile.readFileAsList(CONSTANT.KEYWORDS_FILE);
-        CONSTANT.STANDARD_IDENTIFIERS_LIST = readFile.readFileAsList(CONSTANT.STANDARD_IDENTIFIERS_FILE);
-        CONSTANT.SYMBOLS_LIST = readFile.readFileAsList(CONSTANT.SYMBOLS_FILE);
-
-        File file = new File("src/pascal/programs/pascal1.txt");
-        ArrayList<Token> tokens = getTokens(file);
-
-        for (Token token : tokens) {
-            System.out.println(token+"\n");
-        }
+    public Tokenization(){
+        fillTables();
     }
-    public static ArrayList<Token> getTokens(File file) {
+
+    public ArrayList<Token> getTokens(File file) {
 
         ArrayList<Token> tokens = new ArrayList<>();
 
@@ -49,7 +40,7 @@ public class Main {
                     ArrayList<Character> directSymbols = getDirectSymbols("src/pascal/programs/DirectSymbols.txt");
 
                     if (directSymbols.contains(currentChar)) {
-                        tokens.add(new Token(currentChar + "" , Type.SYMBOL));
+                        tokens.add(new Token(currentChar + "", Type.SYMBOL));
                         continue;
                     }
 
@@ -82,7 +73,7 @@ public class Main {
                                 token = ":";
                             }
 
-                            tokens.add(new Token(token,Type.SYMBOL));
+                            tokens.add(new Token(token, Type.SYMBOL));
                             continue;
                         }
 
@@ -96,7 +87,7 @@ public class Main {
                                 token = ">";
                             }
 
-                            tokens.add(new Token(token , Type.SYMBOL));
+                            tokens.add(new Token(token, Type.SYMBOL));
                             continue;
 
                         }
@@ -118,11 +109,11 @@ public class Main {
                             continue;
                         }
 
-                        if(currentChar == '('){
+                        if (currentChar == '(') {
 
                             if ((i + 1) < line.length && line[i + 1] == '*') {
-                                CommentType commentEnd = getCommentEnd(i+2 , "(*" , line , scanner);
-                                if(commentEnd == null){
+                                CommentType commentEnd = getCommentEnd(i + 2, "(*", line, scanner);
+                                if (commentEnd == null) {
                                     break;
                                 }
                                 i = commentEnd.getIndex();
@@ -135,9 +126,9 @@ public class Main {
                         }
 
 
-                        if(currentChar == '{'){
-                            CommentType commentEnd = getCommentEnd(i+1,"{", line, scanner);
-                            if(commentEnd == null){
+                        if (currentChar == '{') {
+                            CommentType commentEnd = getCommentEnd(i + 1, "{", line, scanner);
+                            if (commentEnd == null) {
                                 break;
                             }
                             i = commentEnd.getIndex();
@@ -155,63 +146,66 @@ public class Main {
 
         return tokens;
     }
-    private static CommentType getCommentEnd(int j, String typeOfComment, char[] line, Scanner scanner) {
 
-        if(typeOfComment.equals("{")){
+    private CommentType getCommentEnd(int j, String typeOfComment, char[] line, Scanner scanner) {
 
-            for(int z = j ; z<line.length ; z++){
+        if (typeOfComment.equals("{")) {
 
-                if(line[z] == '}'){
-                    return new CommentType(line,z) ;
+            for (int z = j; z < line.length; z++) {
+
+                if (line[z] == '}') {
+                    return new CommentType(line, z);
                 }
             }
 
-            while (scanner.hasNextLine()){
-                j = 0 ;
-                char [] newLine = scanner.nextLine().toCharArray();
-                for(int z = j ; z<newLine.length ; z++){
+            while (scanner.hasNextLine()) {
+                j = 0;
+                char[] newLine = scanner.nextLine().toCharArray();
+                for (int z = j; z < newLine.length; z++) {
 
-                    if(newLine[z] == '}'){
-                        return new CommentType(newLine,z) ;
+                    if (newLine[z] == '}') {
+                        return new CommentType(newLine, z);
                     }
                 }
             }
 
 
-        }else if(typeOfComment.equals("(*")){
+        } else if (typeOfComment.equals("(*")) {
 
-            for(int z = j ; z<line.length-1 ; z++){
+            for (int z = j; z < line.length - 1; z++) {
 
-                if(line[z] == '*' && line[z+1] == ')'){
-                    return new CommentType(line,z+1) ;
+                if (line[z] == '*' && line[z + 1] == ')') {
+                    return new CommentType(line, z + 1);
                 }
             }
 
-            while (scanner.hasNextLine()){
+            while (scanner.hasNextLine()) {
 
-                j = 0 ;
-                char [] newLine = scanner.nextLine().toCharArray();
-                for(int z = j ; z<newLine.length-1 ; z++){
+                j = 0;
+                char[] newLine = scanner.nextLine().toCharArray();
+                for (int z = j; z < newLine.length - 1; z++) {
 
-                    if(newLine[z] == '*' && newLine[z+1] == ')'){
-                        return new CommentType(newLine,z+1) ;
+                    if (newLine[z] == '*' && newLine[z + 1] == ')') {
+                        return new CommentType(newLine, z + 1);
                     }
                 }
             }
         }
 
-        return null ;
+        return null;
     }
-    private static ArrayList<Character> getInDirectSymbols(String path) {
+
+    private ArrayList<Character> getInDirectSymbols(String path) {
         return getDirectSymbols(path);
     }
-    private static ArrayList<Character> getDirectSymbols(String filePath) {
+
+    private ArrayList<Character> getDirectSymbols(String filePath) {
 
         ArrayList<Character> characters = new ArrayList<>();
         File file = new File(filePath);
         try {
             Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()){
+            while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 characters.add(line.charAt(0));
             }
@@ -219,13 +213,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        return characters ;
+        return characters;
     }
-    private static int getNumber(ArrayList<Token> tokens, char[] line, int i) {
+
+    private int getNumber(ArrayList<Token> tokens, char[] line, int i) {
 
         int j = i + 1;
         String number = line[i] + "";
-        boolean isInteger = true ;
+        boolean isInteger = true;
         while (j < line.length) {
 
             if (Character.isDigit(line[j])) {
@@ -238,7 +233,7 @@ public class Main {
                 if ((j + 1) < line.length && Character.isDigit(line[(j + 1)])) {
                     number += line[j];
                     j++;
-                    isInteger = false ;
+                    isInteger = false;
                     continue;
                 }
             }
@@ -246,11 +241,12 @@ public class Main {
             break;
         }
 
-        Type type = (isInteger)?Type.INTEGER:Type.FLOAT;
-        tokens.add(new Token(number,type));
+        Type type = (isInteger) ? Type.INTEGER : Type.FLOAT;
+        tokens.add(new Token(number, type));
         return j - 1;
     }
-    private static int getName(ArrayList<Token> tokens, char[] line, int i) {
+
+    private int getName(ArrayList<Token> tokens, char[] line, int i) {
 
         int j = i + 1;
         String name = line[i] + "";
@@ -264,4 +260,10 @@ public class Main {
         return j - 1;
     }
 
+    private void fillTables(){
+        ReadFile readFile = new ReadFile();
+        CONSTANT.KEYWORDS_LIST = readFile.readFileAsList(CONSTANT.KEYWORDS_FILE);
+        CONSTANT.STANDARD_IDENTIFIERS_LIST = readFile.readFileAsList(CONSTANT.STANDARD_IDENTIFIERS_FILE);
+        CONSTANT.SYMBOLS_LIST = readFile.readFileAsList(CONSTANT.SYMBOLS_FILE);
+    }
 }
