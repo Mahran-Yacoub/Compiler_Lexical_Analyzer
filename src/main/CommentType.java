@@ -2,8 +2,8 @@ package main;
 
 public class CommentType {
 
-    private char [] line ;
-    private int index ;
+    private char[] line;
+    private int index;
 
     public CommentType(char[] line, int index) {
         this.line = line;

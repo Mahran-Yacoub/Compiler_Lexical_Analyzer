@@ -15,10 +15,9 @@ public class CONSTANT {
     public static final File SYMBOLS_FILE = new File("src/pascal/programs/symbols.txt");
     public static final File KEYWORDS_FILE = new File("src/pascal/programs/keywords.txt");
     public static final File STANDARD_IDENTIFIERS_FILE = new File("src/pascal/programs/standardIdentifiers.txt");
-    public static  ArrayList<String> SYMBOLS_LIST ;
-    public static  ArrayList<String> STANDARD_IDENTIFIERS_LIST ;
-    public static ArrayList<String> KEYWORDS_LIST ;
-
+    public static ArrayList<String> SYMBOLS_LIST;
+    public static ArrayList<String> STANDARD_IDENTIFIERS_LIST;
+    public static ArrayList<String> KEYWORDS_LIST;
 
 
 }

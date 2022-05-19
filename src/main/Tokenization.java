@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Tokenization {
 
-    public Tokenization(){
+    public Tokenization() {
         fillTables();
     }
 
@@ -137,6 +137,8 @@ public class Tokenization {
                         }
 
                     }
+
+                    tokens.add(new Token(currentChar + "", Type.Error));
                 }
             }
 
@@ -260,7 +262,7 @@ public class Tokenization {
         return j - 1;
     }
 
-    private void fillTables(){
+    private void fillTables() {
         ReadFile readFile = new ReadFile();
         CONSTANT.KEYWORDS_LIST = readFile.readFileAsList(CONSTANT.KEYWORDS_FILE);
         CONSTANT.STANDARD_IDENTIFIERS_LIST = readFile.readFileAsList(CONSTANT.STANDARD_IDENTIFIERS_FILE);
